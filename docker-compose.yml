@@ -1,0 +1,83 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: paulocastellano
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: laravel
+    container_name: laravel-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel
+
+  db:
+    image: mysql:5.7
+    container_name: laravel-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_PASSWORD: secret
+      MYSQL_USER: homestead
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - laravel
+
+  nginx:
+    image: nginx:alpine
+    container_name: laravel-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - laravel
+
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     container_name: phpmyadmin
+     restart: always
+     environment:
+      - PMA_ARBITRARY=1
+     links:
+      - db
+     ports:
+      - 8085:80
+     volumes:
+      - /sessions
+     networks:
+      - laravel
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - laravel
+
+  maildev:
+    image: djfarrelly/maildev
+    expose:
+      - 25
+    ports:
+      - 1080:80
+      - 1025:25
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
