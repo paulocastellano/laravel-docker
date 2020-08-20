@@ -45,23 +45,23 @@ services:
       - laravel
 
   phpmyadmin:
-     image: phpmyadmin/phpmyadmin
-     container_name: phpmyadmin
-     restart: always
-     environment:
+    image: phpmyadmin/phpmyadmin
+    container_name: laravel-phpmyadmin
+    restart: always
+    environment:
       - PMA_ARBITRARY=1
-     links:
+    links:
       - db
-     ports:
+    ports:
       - 8085:80
-     volumes:
+    volumes:
       - /sessions
-     networks:
+    networks:
       - laravel
 
   redis:
     image: "redis:alpine"
-    container_name: redis
+    container_name: laravel-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
@@ -70,6 +70,7 @@ services:
 
   maildev:
     image: djfarrelly/maildev
+    container_name: laravel-maildev
     expose:
       - 25
     ports:
