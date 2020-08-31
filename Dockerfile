@@ -13,13 +13,17 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    unzip
+    unzip \
+    && pecl install xdebug
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Configure PHP extensions
 RUN docker-php-ext-configure zip
+
+# Xdebug
+RUN docker-php-ext-enable xdebug
 
 # Install PHP extensions
 RUN docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd
