@@ -11,8 +11,10 @@ Simple docker for Laravel
 * [php](https://php.net)
 * [composer](https://getcomposer.org/)
 * [mysql](https://www.mysql.com/)
+* [postgres](https://www.postgresql.org/)
 * [redis](https://redis.io/)
 * [phpmyadmin](https://www.phpmyadmin.net/)
+* [pgadmin](https://www.pgadmin.org/)
 * [maildev](https://github.com/maildev/maildev)
 
 ## Instalation steps
