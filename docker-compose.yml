@@ -37,11 +37,11 @@ services:
       - laravel
 
   pgsql:
-    image: postgres:12.4
+    image: postgres:12.4-alpine
     container_name: laravel-pgsql
     restart: always
     volumes:
-      - ./docker-compose/postgres:/docker-entrypoint-initdb.d
+      - ./docker-compose/postgres:/var/lib/postgresql/data
     ports:
       - 54320:5432
     environment:

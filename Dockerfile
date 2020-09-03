@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
+    libpq-dev \
     unzip \
     && pecl install xdebug
 
