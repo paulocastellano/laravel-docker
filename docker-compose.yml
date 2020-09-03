@@ -3,7 +3,7 @@ services:
   app:
     build:
       args:
-        user: paulocastellano
+        user: paulo
         uid: 1000
       context: ./
       dockerfile: Dockerfile
@@ -18,9 +18,9 @@ services:
     networks:
       - laravel
 
-  db:
+  mysql:
     image: mysql:5.7
-    container_name: laravel-db
+    container_name: laravel-mysql
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: homestead
@@ -29,20 +29,54 @@ services:
       MYSQL_USER: homestead
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
+    ports:
+      - 33060:3306
     volumes:
       - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - laravel
+
+  pgsql:
+    image: postgres:12.4
+    container_name: laravel-pgsql
+    restart: always
+    volumes:
+      - ./docker-compose/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - 54320:5432
+    environment:
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_DB: "homestead"
+      POSTGRES_USER: "homestead"
     networks:
       - laravel
 
   nginx:
     image: nginx:alpine
     container_name: laravel-nginx
-    restart: unless-stopped
+    restart: always
     ports:
       - 8000:80
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - laravel
+
+  pgadmin:
+    container_name: laravel-pgadmin
+    logging:
+      driver: none
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "postgres"
+      PGADMIN_DEFAULT_PASSWORD: "postgres"
+    links:
+      - pgsql
+    ports:
+      - "8086:80"
+    depends_on:
+      - pgsql
     networks:
       - laravel
 
@@ -53,7 +87,7 @@ services:
     environment:
       - PMA_ARBITRARY=1
     links:
-      - db
+      - mysql
     ports:
       - 8085:80
     volumes:

@@ -26,7 +26,7 @@ RUN docker-php-ext-configure zip
 RUN docker-php-ext-enable xdebug
 
 # Install PHP extensions
-RUN docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install zip pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
