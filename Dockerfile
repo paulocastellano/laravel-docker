@@ -29,6 +29,12 @@ RUN docker-php-ext-enable xdebug
 # Install PHP extensions
 RUN docker-php-ext-install zip pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
+# php.ini
+COPY docker-compose/php/custom.ini /usr/local/etc/php/conf.d/
+
+# nginx.conf
+COPY docker-compose/nginx/upload.conf /etc/nginx/conf.d/
+
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
